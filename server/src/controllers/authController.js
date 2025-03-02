@@ -32,3 +32,35 @@ export const register = async (req, res) => {
     return res.status(500).json({ message: "server error" });
   }
 };
+
+//business logic for the verification otp
+export const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    //getting the data from the redis
+    const userData = await getData(email);
+    if (!userData) {
+      return res.status(400).json({ message: "otp is expired or invalid" });
+    }
+
+    //verifying the otp
+    if (userData.otp !== otp) {
+      return res.status(400).json({ message: "Invalid otp" });
+    }
+
+    //if otp is correct the ncreating the user in database
+    const newUser = new User({
+      email: userData.email,
+      password: userData.password,
+    });
+    await newUser.save();
+
+    //after saving into the database delete the data from redis
+    await deleteData(email);
+
+    return res.status(201).json({ message: "user registered successfully" });
+  } catch (err) {
+    return res.status(500).json({ message: "server error" });
+  }
+};
