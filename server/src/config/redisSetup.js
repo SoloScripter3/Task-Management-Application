@@ -18,3 +18,20 @@ const connectRedisDB = async () => {
     setTimeout(connectRedisDB, 5000);
   }
 };
+
+export const setWithExpiry = async (key, value, expiryTime = 300) => {
+  await redisClient.set(key, JSON.stringify(value), { EX: expiryTime });
+};
+
+export const getData = async (key) => {
+  const data = await redisClient.get(key);
+  return JSON.parse(data);
+};
+
+export const deleteData = async (key) => {
+  await redisClient.del(key);
+};
+
+connectRedisDB();
+
+export default redisClient;
