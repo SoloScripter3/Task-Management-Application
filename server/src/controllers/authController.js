@@ -65,6 +65,7 @@ export const verifyOtp = async (req, res) => {
 
     return res.status(201).json({ message: "user registered successfully" });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: "server error" });
   }
 };
@@ -82,7 +83,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
     const token = jwt.sign({ id: loginData[0]._id }, process.env.SECRET, {
-      expiresIn: "5m",
+      expiresIn: "24h",
     });
     return res.status(200).json({ token });
   } catch (err) {

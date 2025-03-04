@@ -1,13 +1,18 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
+import User from "../models/users.js";
 import dotenv from "dotenv";
 dotenv.config();
 
 const authMiddleware = async (req, res, next) => {
   try {
-    const token = req.headers.Authorization.split(" ")[1];
-    if (!token) {
+    const authHeader = req.header("Authorization");
+    if (!authHeader) {
       return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "No token, access denied" });
     }
     const decoded = jwt.verify(token, process.env.SECRET);
     const user = await User.findById(decoded.id);
