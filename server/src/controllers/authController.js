@@ -1,5 +1,6 @@
 import User from "../models/users.js";
 import { otpGenerator, sendOtp } from "../utils/mailSender.js";
+import bcrypt from "bcryptjs";
 import redisClient, {
   setWithExpiry,
   getData,
@@ -29,6 +30,7 @@ export const register = async (req, res) => {
 
     return res.status(200).json({ message: "otp sent successfully" });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: "server error" });
   }
 };
