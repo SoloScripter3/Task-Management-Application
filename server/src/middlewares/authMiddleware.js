@@ -1,10 +1,9 @@
-//write authMiddleware.js file
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-export const authMiddleware = async (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   try {
     const token = req.headers.Authorization.split(" ")[1];
     if (!token) {
@@ -22,3 +21,5 @@ export const authMiddleware = async (req, res, next) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+export default authMiddleware;
