@@ -1,5 +1,4 @@
 import Task from "../models/tasks.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
 
 //creating the task function
 export const createTask = async (req, res) => {
@@ -20,7 +19,10 @@ export const createTask = async (req, res) => {
     //saving the task to the database
     await newTask.save();
 
-    //sending the response
+    /**
+     * response contains success status, message and the data
+     * data is nothing but the newly created task
+     */
     return res.status(201).json({
       success: true,
       message: "task created successfully",
@@ -38,7 +40,10 @@ export const getTasks = async (req, res) => {
     //getting all the tasks from the database
     const tasks = await Task.find();
 
-    //sending the response
+    /**
+     * response contains success status, message and the data
+     * data is nothing but list of all the tasks(basically array of tasks of user)
+     */
     return res.status(200).json({
       success: true,
       message: "fetched the tasks successfully",
@@ -71,7 +76,10 @@ export const updateTask = async (req, res) => {
     //saving the updated task
     await task.save();
 
-    //sendind the response
+    /**
+     * response contains success status, message and the data
+     * data is nothing but the updated task
+     */
     return res.status(200).json({
       success: true,
       message: "task updated successfully",
@@ -94,14 +102,15 @@ export const deleteTask = async (req, res) => {
       return res.status(404).json({ message: "task not found" });
     }
 
-    //sending the response
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "task deleted successfully",
-        data: task,
-      });
+    /**
+     * response contains success status, message and the data
+     * data is nothing but the deleted task
+     */
+    return res.status(200).json({
+      success: true,
+      message: "task deleted successfully",
+      data: task,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "server error" });
